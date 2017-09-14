@@ -47,7 +47,7 @@ const messageQuery = (query) => {
 }
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
+  res.send('api working!');
 });
 
 // gets all photos, stores them in a results array and paginates them

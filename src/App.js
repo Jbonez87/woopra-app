@@ -1,18 +1,26 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      photos: []
+    };
+  }
+  componentDidMount() {
+
+  }
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+      <div class="col-lg-6">
+        <h1>Welcome to Woopra search!</h1>
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search for..." />
+            <span class="input-group-btn">
+              <button class="btn btn-secondary" type="button">Go!</button>
+            </span>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
       </div>
     );
   }
