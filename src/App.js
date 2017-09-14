@@ -5,6 +5,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      title: '',
+      currentPage: 1,
       photos: [],
     }
     this.makePhotos = this.makePhotos.bind(this);
@@ -17,22 +19,18 @@ class App extends Component {
     .then(photos => {
       // console.log(photos);
       this.setState({
-        photos: photos,
+        photos: photos.results,
       })
     })
   }
   makePhotos(photos) {
-    Object.keys(photos).map((key) => {
-      const photo = photos[key];
-      return Object.keys(photo).map((idx) => {
-        const photoItem = photo[idx];
-        // console.log(photoItem);
-        return (
-          <div>
-            <h2>{photoItem.title}</h2>
-          </div>
-        );
-      })
+    return photos.map(photo => {
+      return (
+        <div key={photo._id}>
+          <h2>{photo.title}</h2>
+          <img src={photo.url} />
+        </div>
+      );
     })
   }
   render() {
@@ -51,7 +49,7 @@ class App extends Component {
             </div>
           </div>
         </div>
-        <div className="black">
+        <div className="container">
           {this.makePhotos(this.state.photos)}
           {/* {console.log(this.state.photos)} */}
         </div>
