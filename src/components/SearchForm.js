@@ -7,7 +7,7 @@ class SearchForm extends Component {
     this.state = {
       filter: {
         title: '',
-        currentPage: 30,
+        currentPage: 0,
       },
       photos: [],
     }

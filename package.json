@@ -53,10 +53,10 @@
     "start": "PORT=3002 node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "prod": "node app.js",
-    "dev": "nodemon app.js",
-    "pics": "cd data && curl -O https://jsonplaceholder.typicode.com/photos && node rename.js",
-    "seed": "cd db && node seed.js",
+    "prod": "node backend/app.js",
+    "dev": "nodemon backend/app.js",
+    "pics": "cd backend/data && curl -O https://jsonplaceholder.typicode.com/photos && node rename.js",
+    "seed": "cd backend/db && node seed.js",
     "store": "npm run pics && npm run seed"
   },
   "jest": {
