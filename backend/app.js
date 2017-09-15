@@ -72,6 +72,15 @@ app.get('/api/photos', (req, res, next) => {
   .limit(parseInt(pageOptions.limit))
 });
 
+app.get('/api/photos/:title', (res, req, next) => {
+  let title = req.params.title
+  let pageOptions = {
+    page: req.query.page || 0,
+    limit: req.query.limit || 50
+  }
+  let response = {results: []}
+});
+
 
 const port = process.env.PORT;
 app.listen(port, () => {

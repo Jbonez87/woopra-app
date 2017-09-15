@@ -12,24 +12,44 @@ class SearchForm extends Component {
       photos: [],
     }
     this.makePhotos = this.makePhotos.bind(this);
+    this.getAllPhotos = this.getAllPhotos.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.clearPhotos = this.clearPhotos.bind(this);
   }
-  componentDidMount() {
+  handleChange(e) {
+    e.preventDefault();
+    // console.log(e.target.value);
+    this.setState({
+      filter: {
+        [e.target.name]: e.target.value,
+      }
+    });
+    console.log(this.state.filter.title);
+  }
+  clearPhotos() {
+    this.setState({
+      photos: [],
+    });
+  }
+  getAllPhotos() {
     fetch(`http://localhost:3001/api/photos?page=${this.state.filter.currentPage}`)
     .then(res => {
       return res.json()
     })
     .then(photos => {
-      // console.log(photos);
       this.setState({
         photos: photos.results,
       })
+    })
+    .then(() => {
+      this.makePhotos(this.state.photos);
     })
   }
   makePhotos(photos) {
     return photos.map(photo => {
       return (
         <div key={photo._id}>
-          <h2>{photo.title}</h2>
+          <h2>{photo.title.toUpperCase()}</h2>
           <p>{photo.id}</p>
           <img src={photo.url} alt="" />
         </div>
@@ -40,12 +60,43 @@ class SearchForm extends Component {
     return (
       <div className="row">
         <div className="col-lg-4 col-centered">
-          <div className="input-group">
-            <input type="text" className="form-control" placeholder="Search for..." />
-              <span className="input-group-btn">
-                <button className="btn btn-success" type="button">Go</button>
-              </span>
-          </div>
+            <form className="input-group">
+              <input
+                type="text"
+                name="title"
+                className="form-control"
+                value={this.state.filter.title}
+                onChange={this.handleChange}
+                placeholder="Search for..."
+              />
+                <span className="input-group-btn">
+                  <button
+                    className="btn btn-outline-success"
+                    type="button"
+                    onClick={this.getPhotoByTitle}
+                  >
+                    Go
+                  </button>
+                </span>
+                <span className="input-group-btn">
+                  <button
+                    className="btn btn-outline-primary"
+                    type="button"
+                    onClick={this.getAllPhotos}
+                  >
+                    All Photos
+                  </button>
+                </span>
+                <span className="input-group-btn">
+                  <button
+                    className="btn btn-outline-danger"
+                    type="button"
+                    onClick={this.clearPhotos}
+                  >
+                    Clear
+                  </button>
+                </span>
+            </form>
         </div>
         <SearchResult
           photos={this.state.photos}
