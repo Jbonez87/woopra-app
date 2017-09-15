@@ -46,11 +46,11 @@ class SearchForm extends Component {
                 <button className="btn btn-success" type="button">Go</button>
               </span>
           </div>
-          <SearchResult
-            photos={this.state.photos}
-            makePhotos={this.makePhotos}
-          />
         </div>
+        <SearchResult
+          photos={this.state.photos}
+          makePhotos={this.makePhotos}
+        />
       </div>
     );
   }
