@@ -10,9 +10,11 @@ class SearchForm extends Component {
         currentPage: 0,
       },
       photos: [],
+      buttonTypes: ['Go', 'All Photos', 'Clear'],
     }
     this.makePhotos = this.makePhotos.bind(this);
     this.getAllPhotos = this.getAllPhotos.bind(this);
+    this.getPhotoByTitle = this.getPhotoByTitle.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.clearPhotos = this.clearPhotos.bind(this);
   }
@@ -25,6 +27,20 @@ class SearchForm extends Component {
       }
     });
     console.log(this.state.filter.title);
+  }
+  getPhotoByTitle() {
+    fetch(`http://localhost:3001/api/photos?page=${this.state.filter.currentPage}?title:${this.state.filter.title}`)
+    .then(res => {
+      return res.json()
+    })
+    .then(photos => {
+      this.setState({
+        photos: photos.results,
+      })
+    })
+    .then(() => {
+      this.makePhotos(this.state.photos);
+    })
   }
   clearPhotos() {
     this.setState({
@@ -60,7 +76,7 @@ class SearchForm extends Component {
     return (
       <div className="row">
         <div className="col-lg-4 col-centered">
-            <form className="input-group">
+            <form className="input-group" onSubmit={this.getPhotoByTitle}>
               <input
                 type="text"
                 name="title"

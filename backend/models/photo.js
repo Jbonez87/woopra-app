@@ -28,4 +28,9 @@ const photoSchema = new Schema({
   }
 })
 
-module.exports = mongoose.model('Photo', photoSchema)
+const Photo = mongoose.model('Photo', photoSchema);
+// const index = Photo.index({title: 'text'});
+
+module.exports = {
+  Photo
+};

@@ -3,7 +3,8 @@ const express = require('express'),
       bodyParser = require('body-parser'),
       mongoose = require('mongoose'),
       config = require('dotenv').config(),
-      Photo = require('./models/photo');
+      Photo = require('./models/photo').Photo;
+      // index = Photo.index();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -51,36 +52,51 @@ app.get('/', (req, res) => {
 });
 
 // gets all photos, stores them in a results array and paginates them
-app.get('/api/photos', (req, res, next) => {
+// app.get('/api/photos', (req, res, next) => {
+//   let pageOptions = {
+//     page: req.query.page || 0,
+//     limit: req.query.limit || 50
+//   }
+//   console.log(req.query.params);
+//   let response = {results: []}
+//   Photo.find(
+//     messageQuery(req.query), (err, mongoRes) => {
+//     if(err){
+//       console.error(err)
+//       response.results.push(err)
+//     }
+//     else{
+//       response.results = mongoRes
+//     }
+//     res.json(response)
+//   })
+//   .skip(pageOptions.page * pageOptions.limit)
+//   .limit(parseInt(pageOptions.limit))
+// });
+
+app.get("/api/photos", function(req, res, next) {
+  let response = {results: []};
   let pageOptions = {
     page: req.query.page || 0,
     limit: req.query.limit || 50
-  }
-  let response = {results: []}
+  };
+  console.log(req.query.title);
   Photo.find(
-    messageQuery(req.query), (err, mongoRes) => {
-    if(err){
-      console.error(err)
-      response.results.push(err)
-    }
-    else{
-      response.results = mongoRes
-    }
-    res.json(response)
-  })
-  .skip(pageOptions.page * pageOptions.limit)
-  .limit(parseInt(pageOptions.limit))
+    messageQuery(
+      {
+        "$text": { $search: req.query.title },
+        "score": {$meta: 'textScore'}
+      }),
+      (err, mongoRes) => {
+        if (err) {
+          console.error(err);
+          response.results.push(err);
+        }
+      }
+    )
+    .skip(pageOptions.page * pageOptions.limit)
+    .limit(parseInt(pageOptions.limit))
 });
-
-app.get('/api/photos/:title', (res, req, next) => {
-  let title = req.params.title
-  let pageOptions = {
-    page: req.query.page || 0,
-    limit: req.query.limit || 50
-  }
-  let response = {results: []}
-});
-
 
 const port = process.env.PORT;
 app.listen(port, () => {
