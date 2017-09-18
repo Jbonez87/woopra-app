@@ -5,10 +5,8 @@ class SearchForm extends Component {
   constructor() {
     super();
     this.state = {
-      filter: {
-        title: '',
-        currentPage: 0,
-      },
+      title: '',
+      page: 0,
       photos: [],
       buttonTypes: ['Go', 'All Photos', 'Clear'],
     }
@@ -22,14 +20,12 @@ class SearchForm extends Component {
     e.preventDefault();
     // console.log(e.target.value);
     this.setState({
-      filter: {
-        [e.target.name]: e.target.value,
-      }
+      [e.target.name]: e.target.value,
     });
-    console.log(this.state.filter.title);
+    // console.log(this.state.filter.title);
   }
   getPhotoByTitle() {
-    fetch(`http://localhost:3001/api/photos?page=${this.state.filter.currentPage}?title:${this.state.filter.title}`)
+    fetch(`http://localhost:3001/api/photos?title=${this.state.title}`)
     .then(res => {
       return res.json()
     })
@@ -48,7 +44,7 @@ class SearchForm extends Component {
     });
   }
   getAllPhotos() {
-    fetch(`http://localhost:3001/api/photos?page=${this.state.filter.currentPage}`)
+    fetch(`http://localhost:3001/api/photos?page=${this.state.page}`)
     .then(res => {
       return res.json()
     })
@@ -76,12 +72,12 @@ class SearchForm extends Component {
     return (
       <div className="row">
         <div className="col-lg-4 col-centered">
-            <form className="input-group" onSubmit={this.getPhotoByTitle}>
+            <form className="input-group">
               <input
                 type="text"
                 name="title"
                 className="form-control"
-                value={this.state.filter.title}
+                value={this.state.title}
                 onChange={this.handleChange}
                 placeholder="Search for..."
               />
