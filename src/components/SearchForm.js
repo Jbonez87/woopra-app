@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import SearchResult from './SearchResult';
+import InfiniteScroll from 'react-infinite-scroller';
 
 class SearchForm extends Component {
   constructor() {
@@ -8,7 +9,6 @@ class SearchForm extends Component {
       title: '',
       page: 0,
       photos: [],
-      buttonTypes: ['Go', 'All Photos', 'Clear'],
     }
     this.makePhotos = this.makePhotos.bind(this);
     this.getAllPhotos = this.getAllPhotos.bind(this);
@@ -24,23 +24,36 @@ class SearchForm extends Component {
     });
     // console.log(this.state.filter.title);
   }
+  // searchByParam(e, param) {
+  //   e.preventDefault();
+  //   fetch(`http://localhost:3001/api/photos?${param}=${e.target.value}`)
+  //   .then(res => {
+  //     return res.json()
+  //   })
+  //   .then(photos => {
+  //     this.setState({
+  //       photos: photos.results,
+  //     })
+  //   })
+  // }
   getPhotoByTitle() {
-    fetch(`http://localhost:3001/api/photos?title=${this.state.title}`)
-    .then(res => {
-      return res.json()
-    })
-    .then(photos => {
-      this.setState({
-        photos: photos.results,
+      fetch(`http://localhost:3001/api/photos?title=${this.state.title}`)
+      .then(res => {
+        return res.json()
       })
-    })
-    .then(() => {
-      this.makePhotos(this.state.photos);
-    })
+      .then(photos => {
+        this.setState({
+          photos: photos.results,
+        })
+      })
+      // .then(() => {
+      //   this.makePhotos(this.state.photos);
+      // })
   }
   clearPhotos() {
     this.setState({
       photos: [],
+      title: '',
     });
   }
   getAllPhotos() {
@@ -53,14 +66,14 @@ class SearchForm extends Component {
         photos: photos.results,
       })
     })
-    .then(() => {
-      this.makePhotos(this.state.photos);
-    })
+    // .then(() => {
+    //   this.makePhotos(this.state.photos);
+    // })
   }
   makePhotos(photos) {
     return photos.map(photo => {
       return (
-        <div key={photo._id}>
+        <div key={photo._id} className="search">
           <h2>{photo.title.toUpperCase()}</h2>
           <p>{photo.id}</p>
           <img src={photo.url} alt="" />
@@ -110,13 +123,20 @@ class SearchForm extends Component {
                 </span>
             </form>
         </div>
-        <SearchResult
-          photos={this.state.photos}
-          makePhotos={this.makePhotos}
-        />
+        <InfiniteScroll
+          pageStart={this.state.page}
+        >
+          <SearchResult
+            photos={this.state.photos}
+            makePhotos={this.makePhotos}
+          />
+        </InfiniteScroll>
       </div>
     );
   }
 }
 
 export default SearchForm;
+
+
+// 34674 number of pixels to 50 pictures

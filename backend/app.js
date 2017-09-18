@@ -31,7 +31,7 @@ const allowedSearchables = {
 const db = mongoose.connection;
 // console.log(db);
 
-const messageQuery = (query) => {
+const cleanQuery = (query) => {
   // console.log(query)
   let regefied = '', newQuery = {}
   Object.keys(query).forEach(key => {
@@ -53,14 +53,14 @@ app.get('/', (req, res) => {
 
 // gets all photos, stores them in a results array and paginates them
 app.get('/api/photos', (req, res, next) => {
-  let pageOptions = {
+  const pageOptions = {
     page: req.query.page || 0,
-    limit: req.query.limit || 50
+    limit: req.query.limit || 100
   }
   console.log(req.query.params);
-  let response = {results: []}
+  const response = {results: []}
   Photo.find(
-    messageQuery(req.query), (err, mongoRes) => {
+    cleanQuery(req.query), (err, mongoRes) => {
     if(err){
       console.error(err)
       response.results.push(err)
@@ -74,7 +74,7 @@ app.get('/api/photos', (req, res, next) => {
   .limit(parseInt(pageOptions.limit))
 });
 
-// app.get("/api/photos/:title", function(req, res, next) {
+// app.get("/api/photos", function(req, res, next) {
 //   let response = {results: []};
 //   let pageOptions = {
 //     page: req.query.page || 0,
@@ -82,7 +82,7 @@ app.get('/api/photos', (req, res, next) => {
 //   };
 //   console.log(req.params.title);
 //   Photo.find(
-//     messageQuery(
+//     cleanQuery(
 //       {
 //         "$text": { $search: req.params.title },
 //         "score": {$meta: 'textScore'}
@@ -91,7 +91,10 @@ app.get('/api/photos', (req, res, next) => {
 //         if (err) {
 //           console.error(err);
 //           response.results.push(err);
+//         } else {
+//           response.results = mongoRes
 //         }
+//         res.json(response)
 //       }
 //     )
 //     .skip(pageOptions.page * pageOptions.limit)
